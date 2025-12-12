@@ -1,242 +1,178 @@
-## PRAKTIKUM TEORI GRAF C12
-| No | Nama                      |     NRP      |
-| -- | ------------------------- | ------------ |
-| 1  | Ananda Faris Ghazi R      |  5025231280  |
-| 2  | Muhammad Nawfal Alfanni D |  5025241185  |
-| 3  | Farrel Prastita Ramadhan  |  5025241219  |
+# **PRAKTIKUM TEORI GRAF C12**
 
+| No | Nama                      | NRP        |
+| -- | ------------------------- | ---------- |
+| 1  | Ananda Faris Ghazi R      | 5025231280 |
+| 2  | Muhammad Nawfal Alfanni D | 5025241185 |
+| 3  | Farrel Prastita Ramadhan  | 5025241219 |
 
-Mahasiswa Teori Graf C diberikan 2 soal praktikum untuk dibuatkan program yang bisa berjalan sebagai bentuk implementasi dari soal tersebut. Soal dari praktikum berupa "Knight's Tour" dan "Largest Monotonically Increasing Subsequence".
+Mahasiswa mata kuliah **Teori Graf C12** diberikan dua soal praktikum yang bertujuan untuk mengimplementasikan konsep algoritma ke dalam sebuah program. Soal yang diberikan pada praktikum ini adalah **Knight’s Tour** dan **Largest Monotonically Increasing Subsequence (LMIS)**.
 
-Melalui praktikum ini, mahasiswa diharapkan mampu memahami konsep algoritma pencarian, mengimplementasikan algoritma tersebut ke dalam sebuah program, serta menganalisis cara kerja dan keberhasilan algoritma dalam menyelesaikan permasalahan.
-
-
-## SOAL 1 : Largest Monotonically Increasing Subsequence
-
-
-## 1) Tujuan Program
-
-Program menerima input sebuah array bilangan, lalu mencari **subsequence meningkat (strictly increasing)** terpanjang dari array tersebut, dan menampilkan hasil subsequence dan panjangnya. 
-
-
-## 2) Struktur Kode dan Fungsinya
-
-### a. `TreeNode`
-
-Merepresentasikan satu node di tree pencarian subsequence:
-
-* `value`: nilai elemen array di node
-* `index`: posisi elemen di array
-* `children`: daftar node lanjutan yang nilainya lebih besar
-* `sequence`: subsequence dari root sampai node ini 
-
-### b. `build_tree(arr, index, parent_sequence)`
-
-Membangun tree subsequence meningkat mulai dari `arr[index]`:
-
-* Membuat node baru
-* `node.sequence = parent_sequence + [arr[index]]`
-* Untuk setiap `i > index`, kalau `arr[i] > arr[index]`, maka `arr[i]` bisa jadi kelanjutan subsequence → dibuat child secara rekursif 
-
-**Intinya:** fungsi ini membuat semua kemungkinan subsequence meningkat yang berawal dari elemen tertentu.
-
-### c. `find_lmis(arr)`
-
-Algoritma utama versi tree + DFS:
-
-1. Jika array kosong → return `[]` 
-2. Membuat “root” untuk setiap index (jadi semua kemungkinan start dicoba) 
-3. DFS ke seluruh node dan menyimpan `longest` jika menemukan `node.sequence` lebih panjang 
-4. Kembalikan `longest` 
-
-### d. `print_tree(...)`
-
-Hanya untuk visualisasi bentuk tree (opsional) dengan karakter cabang. 
-
-### e. `main()`
-
-* Minta input array “dipisah koma”
-* Parse input jadi list int
-* Panggil `find_lmis` dan cetak hasil
-* Opsional tampilkan visualisasi tree untuk 5 root pertama 
-
-### f. `find_lmis_dp(arr)` (alternatif DP)
-
-Versi **dynamic programming** yang lebih efisien:
-
-* `dp[i]` menyimpan subsequence meningkat terbaik yang **berakhir di i**
-* Untuk setiap pasangan `j < i`, kalau `arr[j] < arr[i]` dan subsequence dari `j` membuat `dp[i]` lebih panjang, update `dp[i]` 
-
-> Di file ini, `main()` masih memakai versi tree (`find_lmis`), bukan DP. 
-
-
-## 3) Cara Kerja Algoritma (Mengapa Output Bisa Benar)
-
-### Mengapa `build_tree` benar membentuk “semua” subsequence meningkat?
-
-Untuk setiap elemen `arr[index]`, `build_tree` hanya membuat child dari posisi setelahnya (`i = index+1..`) yang nilainya **lebih besar** (`arr[i] > arr[index]`). 
-Ini memastikan:
-
-* Urutan index selalu maju → subsequence valid (tidak melanggar urutan array)
-* Nilai selalu naik strict → subsequence meningkat
-
-Karena semua kandidat `i` yang valid dicoba, maka semua kemungkinan kelanjutan subsequence dari node itu **tercakup**.
-
-### Mengapa DFS menemukan yang terpanjang?
-
-DFS mengunjungi **seluruh node** pada tree dari setiap root. 
-Setiap node menyimpan `node.sequence` yang merupakan subsequence valid dari root ke node tersebut. 
-Saat DFS, program selalu memperbarui `longest` jika menemukan sequence lebih panjang. 
-
-Karena:
-
-1. Semua subsequence meningkat valid dihasilkan sebagai node-node di tree, dan
-2. DFS memeriksa semuanya,
-   maka `longest` pada akhir DFS pasti merupakan **subsequence meningkat terpanjang**.
-
-
-## 4) Kenapa Program “Berhasil” dan Apa Batasannya
-
-### Alasan berhasil
-
-* Validitas subsequence dijaga oleh syarat `arr[i] > arr[index]` dan `i > index`. 
-* Tidak ada subsequence yang terlewat karena setiap root dicoba dan semua cabang valid dieksplor. 
-* Seleksi hasil terpanjang dilakukan konsisten selama DFS. 
-
-
-## 5) Contoh Alur Eksekusi Singkat
-
-Misal input: `4, 1, 13, 7, 0, 2, 8, 11, 3`
-
-* Program membuat root dari 4, 1, 13, 7, 0, 2, 8, 11, 3
-* Dari root `1`, ia bisa lanjut ke `13`, `7`, `2`, `8`, `11`, `3` (yang > 1 dan berada setelahnya), lalu lanjut lagi sampai tidak bisa
-* DFS membandingkan seluruh jalur dan memilih yang paling panjang
-* Output menampilkan subsequence meningkat terpanjang dan panjangnya.
-
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-## SOAL 2 : Knight's Tour
-
-Baik 👍
-Karena kamu **sudah mengirim kode Knight’s Tour (`Knight.ipynb`)**, berikut aku buatkan **laporan inti yang formal dan akademik**, mencakup:
-
-* **Deskripsi kode**
-* **Cara kerja algoritma**
-* **Alasan algoritma berhasil**
-* **Open tour vs closed tour**
-* **Analisis singkat kompleksitas**
-
-Bahasanya siap **langsung masuk laporan praktikum**.
+Melalui praktikum ini, mahasiswa diharapkan dapat memahami konsep algoritma pencarian, menerapkannya ke dalam program, serta menjelaskan cara kerja dan alasan keberhasilan algoritma dalam menyelesaikan permasalahan yang diberikan.
 
 ---
 
-## **BAB II
+# **Soal I
 
-DESKRIPSI PROGRAM DAN ALGORITMA**
+Largest Monotonically Increasing Subsequence (LMIS)**
 
-### **2.1 Deskripsi Program**
+## **1.1 Tujuan Program**
 
-Program yang dibuat bertujuan untuk menyelesaikan permasalahan *The Knight’s Tour* pada papan catur berukuran 8 × 8. Program ini mengimplementasikan algoritma pencarian lintasan untuk menentukan urutan pergerakan bidak kuda sehingga seluruh petak papan catur dapat dikunjungi tepat satu kali sesuai dengan aturan pergerakan kuda.
+Tujuan dari program ini adalah untuk menerima sebuah array bilangan sebagai input, kemudian mencari **subsequence meningkat (strictly increasing)** terpanjang dari array tersebut. Program akan menampilkan subsequence hasil beserta panjangnya.
 
-Program dikembangkan menggunakan bahasa pemrograman Python dengan bantuan pustaka `NumPy` untuk pengelolaan data matriks serta `Matplotlib` untuk memvisualisasikan rute perjalanan bidak kuda. Hasil akhir program berupa papan catur yang berisi urutan langkah bidak kuda serta visualisasi lintasan pergerakan.
 
----
+## **1.2 Struktur Kode dan Fungsinya**
 
-### **2.2 Algoritma yang Digunakan**
+### **1.2.1 `TreeNode`**
 
-Algoritma utama yang digunakan dalam program ini adalah **algoritma backtracking dengan heuristik Warnsdorff**.
+Kelas `TreeNode` digunakan untuk merepresentasikan satu node dalam tree pencarian subsequence. Setiap node memiliki:
 
-1. **Backtracking**
-   Digunakan untuk menelusuri kemungkinan pergerakan bidak kuda secara rekursif. Jika pada suatu langkah tidak ditemukan pergerakan yang valid, algoritma akan kembali ke langkah sebelumnya dan mencoba alternatif gerakan lain.
+* `value` sebagai nilai elemen array,
+* `index` sebagai posisi elemen dalam array,
+* `children` untuk menyimpan node lanjutan,
+* `sequence` untuk menyimpan subsequence dari root hingga node tersebut.
 
-2. **Heuristik Warnsdorff**
-   Untuk meningkatkan efisiensi pencarian, algoritma memilih langkah berikutnya berdasarkan jumlah kemungkinan langkah lanjutan paling sedikit. Petak dengan derajat (*degree*) terkecil diprioritaskan untuk dikunjungi terlebih dahulu.
 
-Pendekatan ini secara signifikan mengurangi kemungkinan terjebak pada kondisi buntu (*dead end*).
+### **1.2.2 `build_tree(arr, index, parent_sequence)`**
 
----
+Fungsi ini digunakan untuk membangun tree subsequence meningkat dengan langkah-langkah sebagai berikut:
 
-### **2.3 Cara Kerja Program**
+* Membuat node baru dari elemen array pada indeks tertentu,
+* Menambahkan elemen tersebut ke subsequence sebelumnya,
+* Membuat child node secara rekursif jika ditemukan elemen berikutnya yang lebih besar.
 
-Langkah kerja program secara umum adalah sebagai berikut:
+Dengan cara ini, seluruh kemungkinan subsequence meningkat dapat dibentuk.
 
-1. Program menginisialisasi papan catur 8 × 8 dengan nilai awal kosong.
-2. Posisi awal bidak kuda ditentukan dan ditandai sebagai langkah pertama.
-3. Program menghitung seluruh kemungkinan gerakan bidak kuda dari posisi saat ini.
-4. Gerakan yang valid dipilih berdasarkan heuristik Warnsdorff, yaitu petak dengan jumlah kemungkinan lanjutan paling sedikit.
-5. Setiap petak yang dikunjungi ditandai agar tidak dikunjungi kembali.
-6. Proses berlanjut hingga seluruh 64 petak berhasil dikunjungi.
-7. Jika tidak ditemukan langkah lanjutan yang valid, algoritma melakukan *backtracking*.
-8. Setelah solusi ditemukan, program menampilkan hasil dalam bentuk matriks langkah dan visualisasi lintasan.
 
----
+### **1.2.3 `find_lmis(arr)`**
 
-### **2.4 Open Tour dan Closed Tour**
+Fungsi ini merupakan algoritma utama untuk mencari LMIS dengan pendekatan tree dan **Depth First Search (DFS)**, dengan langkah:
 
-Program ini mendukung dua jenis solusi:
+1. Membuat root untuk setiap elemen array,
+2. Melakukan DFS pada setiap tree,
+3. Menyimpan subsequence terpanjang yang ditemukan,
+4. Mengembalikan subsequence dengan panjang maksimum.
+
+
+### **1.2.4 `print_tree(node)`**
+
+Fungsi ini bersifat opsional dan digunakan untuk menampilkan struktur tree subsequence dalam bentuk visual di terminal.
+
+
+### **1.2.5 `main()`**
+
+Fungsi utama yang mengatur alur program, yaitu:
+
+* Menerima input array dari pengguna,
+* Memanggil fungsi pencarian LMIS,
+* Menampilkan hasil subsequence dan panjangnya,
+* Menyediakan opsi untuk menampilkan visualisasi tree.
+
+
+### **1.2.6 `find_lmis_dp(arr)`**
+
+Fungsi ini merupakan versi alternatif menggunakan **dynamic programming**.
+Pendekatan ini lebih efisien karena menyimpan subsequence terbaik pada setiap indeks array dan memperbaruinya secara bertahap.
+
+
+## **1.3 Cara Kerja Algoritma**
+
+Fungsi `build_tree` hanya membentuk child dari elemen array yang memiliki indeks lebih besar dan nilai lebih besar dari elemen sebelumnya. Hal ini memastikan bahwa subsequence yang dihasilkan:
+
+* Tidak melanggar urutan array,
+* Selalu bersifat meningkat.
+
+Dengan melakukan DFS pada seluruh node tree, program dapat membandingkan semua subsequence yang valid dan memilih subsequence dengan panjang maksimum.
+
+
+## **1.4 Alasan Program Berhasil**
+
+Program berhasil menemukan LMIS karena:
+
+1. Setiap subsequence yang dibentuk selalu valid,
+2. Seluruh kemungkinan subsequence meningkat dicoba,
+3. DFS memastikan tidak ada subsequence yang terlewat,
+4. Seleksi subsequence terpanjang dilakukan secara konsisten.
+
+
+## **1.5 Contoh Alur Eksekusi**
+
+Untuk input:
+
+```
+4, 1, 13, 7, 0, 2, 8, 11, 3
+```
+
+Program akan membentuk tree subsequence dari setiap elemen, kemudian mencari subsequence meningkat terpanjang melalui DFS. Hasil akhir berupa subsequence dengan panjang terbesar akan ditampilkan sebagai output.
+
+
+# **Soal II
+
+Knight’s Tour**
+
+## **2.1 Deskripsi Program**
+
+Program Knight’s Tour dibuat untuk menentukan lintasan pergerakan bidak kuda pada papan catur berukuran 8 × 8 sehingga seluruh petak papan dapat dikunjungi tepat satu kali sesuai aturan pergerakan kuda.
+
+Program diimplementasikan menggunakan bahasa pemrograman Python dengan bantuan pustaka `NumPy` untuk pengolahan matriks dan `Matplotlib` untuk menampilkan visualisasi lintasan kuda.
+
+
+## **2.2 Algoritma yang Digunakan**
+
+Algoritma yang digunakan adalah **backtracking** dengan bantuan **heuristik Warnsdorff**.
+Backtracking digunakan untuk mencoba setiap kemungkinan langkah, sedangkan heuristik Warnsdorff membantu memilih langkah dengan jumlah kemungkinan lanjutan paling sedikit agar pencarian lebih efisien.
+
+
+## **2.3 Cara Kerja Program**
+
+Langkah kerja program adalah sebagai berikut:
+
+1. Program menginisialisasi papan catur 8 × 8.
+2. Posisi awal kuda ditentukan.
+3. Semua kemungkinan langkah kuda dihitung.
+4. Langkah terbaik dipilih berdasarkan heuristik Warnsdorff.
+5. Petak yang sudah dikunjungi ditandai.
+6. Proses diulang hingga seluruh petak dikunjungi.
+7. Jika langkah buntu, program melakukan backtracking.
+8. Hasil akhir ditampilkan dalam bentuk matriks dan visualisasi lintasan.
+
+
+## **2.4 Open Tour dan Closed Tour**
 
 * **Open Tour**
-  Perjalanan bidak kuda dapat berakhir di petak mana saja setelah seluruh papan dikunjungi.
+  Kuda dapat berhenti di petak mana saja setelah seluruh papan dikunjungi.
 
 * **Closed Tour**
-  Setelah seluruh papan dikunjungi, posisi akhir bidak kuda harus dapat menyerang posisi awal dengan satu langkah kuda.
+  Posisi akhir kuda harus dapat menyerang posisi awal dengan satu langkah kuda.
 
-Untuk *closed tour*, program melakukan pengecekan tambahan pada langkah terakhir untuk memastikan bahwa posisi akhir memiliki hubungan gerak kuda dengan posisi awal.
+Program melakukan pengecekan tambahan untuk memastikan kondisi *closed tour* terpenuhi.
 
----
 
-## **BAB III
+# **BAB III
 
-ANALISIS KEBERHASILAN PROGRAM**
+Analisis Keberhasilan Program**
 
-### **3.1 Alasan Algoritma Berhasil**
+## **3.1 Alasan Algoritma Berhasil**
 
-Algoritma berhasil menyelesaikan permasalahan *The Knight’s Tour* karena beberapa alasan berikut:
+Algoritma berhasil karena:
 
-1. **Validitas Gerakan Terjamin**
-   Setiap langkah bidak kuda selalu diperiksa agar berada di dalam batas papan catur dan belum pernah dikunjungi sebelumnya.
+1. Gerakan kuda selalu divalidasi,
+2. Tidak ada petak yang dikunjungi lebih dari satu kali,
+3. Heuristik Warnsdorff mengurangi kemungkinan jalan buntu,
+4. Backtracking memungkinkan pencarian solusi alternatif.
 
-2. **Tidak Ada Pengulangan Petak**
-   Setiap petak ditandai setelah dikunjungi sehingga tidak mungkin dikunjungi lebih dari satu kali.
+## **3.2 Keterbatasan Program**
 
-3. **Efisiensi Heuristik Warnsdorff**
-   Dengan memilih petak dengan kemungkinan lanjutan paling sedikit, algoritma meminimalkan risiko terjebak pada kondisi buntu.
+Beberapa keterbatasan program antara lain:
 
-4. **Backtracking sebagai Mekanisme Pemulihan**
-   Jika suatu jalur gagal, algoritma dapat kembali ke langkah sebelumnya dan mencoba jalur lain, sehingga solusi tetap dapat ditemukan.
+1. Tidak semua posisi awal selalu menghasilkan *closed tour*,
+2. Performa dapat menurun pada papan dengan ukuran lebih besar,
+3. Algoritma masih bergantung pada heuristik.
 
----
 
-### **3.2 Analisis Kompleksitas**
+# **BAB IV
 
-Secara teori, kompleksitas masalah *The Knight’s Tour* dengan *backtracking* bersifat eksponensial karena banyaknya kemungkinan lintasan. Namun, dengan penerapan heuristik Warnsdorff, kompleksitas praktis dapat ditekan secara signifikan sehingga solusi dapat ditemukan dalam waktu yang relatif singkat untuk papan 8 × 8.
+Kesimpulan**
 
----
-
-### **3.3 Keterbatasan Program**
-
-Beberapa keterbatasan dari program ini antara lain:
-
-1. Heuristik Warnsdorff tidak selalu menjamin solusi untuk semua konfigurasi papan yang lebih besar.
-2. Program masih bergantung pada pemilihan posisi awal.
-3. Untuk ukuran papan yang lebih besar, waktu eksekusi dapat meningkat.
-
----
-
-## **BAB IV
-
-KESIMPULAN**
-
-Program *The Knight’s Tour* berhasil diimplementasikan menggunakan algoritma *backtracking* dengan heuristik Warnsdorff. Program mampu menghasilkan rute perjalanan bidak kuda yang mengunjungi seluruh petak papan catur tepat satu kali, baik dalam bentuk *open tour* maupun *closed tour*. Pendekatan heuristik terbukti efektif dalam meningkatkan efisiensi pencarian dan mengurangi kegagalan pencarian solusi.
-
----
-
-Kalau kamu mau, aku bisa:
-
-* Menyesuaikan bahasa **sesuai gaya laporan ITS 100%**
-* Membuat **BAB V (Lampiran Kode)**
-* Menambahkan **flowchart algoritma**
-* Mengubah ini ke format **DOCX / LaTeX**
-
-Tinggal bilang mau lanjut ke bagian mana 👌
+Berdasarkan hasil praktikum, dapat disimpulkan bahwa algoritma *backtracking* dengan heuristik Warnsdorff mampu menyelesaikan permasalahan Knight’s Tour dengan baik pada papan catur berukuran 8 × 8. Program berhasil menghasilkan lintasan *open tour* maupun *closed tour* serta menampilkan visualisasi pergerakan bidak kuda.
 
