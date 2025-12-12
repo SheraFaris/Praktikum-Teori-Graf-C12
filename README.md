@@ -10,15 +10,14 @@ Mahasiswa Teori Graf C diberikan 2 soal praktikum untuk dibuatkan program yang b
 
 Melalui praktikum ini, mahasiswa diharapkan mampu memahami konsep algoritma pencarian, mengimplementasikan algoritma tersebut ke dalam sebuah program, serta menganalisis cara kerja dan keberhasilan algoritma dalam menyelesaikan permasalahan.
 
-****
 
----
+## SOAL 1 : Largest Monotonically Increasing Subsequence
+
 
 ## 1) Tujuan Program
 
 Program menerima input sebuah array bilangan, lalu mencari **subsequence meningkat (strictly increasing)** terpanjang dari array tersebut, dan menampilkan hasil subsequence dan panjangnya. 
 
----
 
 ## 2) Struktur Kode dan Fungsinya
 
@@ -70,7 +69,6 @@ Versi **dynamic programming** yang lebih efisien:
 
 > Di file ini, `main()` masih memakai versi tree (`find_lmis`), bukan DP. 
 
----
 
 ## 3) Cara Kerja Algoritma (Mengapa Output Bisa Benar)
 
@@ -96,7 +94,6 @@ Karena:
 2. DFS memeriksa semuanya,
    maka `longest` pada akhir DFS pasti merupakan **subsequence meningkat terpanjang**.
 
----
 
 ## 4) Kenapa Program “Berhasil” dan Apa Batasannya
 
@@ -106,11 +103,6 @@ Karena:
 * Tidak ada subsequence yang terlewat karena setiap root dicoba dan semua cabang valid dieksplor. 
 * Seleksi hasil terpanjang dilakukan konsisten selama DFS. 
 
-### Batasan (penting untuk ditulis di laporan)
-
-Versi tree ini bisa **meledak** untuk input besar, karena jumlah subsequence meningkat bisa sangat banyak (mendekati eksponensial pada kasus tertentu). Itu sebabnya di file juga disediakan versi DP (`find_lmis_dp`) yang lebih aman untuk ukuran data lebih besar. 
-
----
 
 ## 5) Contoh Alur Eksekusi Singkat
 
@@ -119,8 +111,10 @@ Misal input: `4, 1, 13, 7, 0, 2, 8, 11, 3`
 * Program membuat root dari 4, 1, 13, 7, 0, 2, 8, 11, 3
 * Dari root `1`, ia bisa lanjut ke `13`, `7`, `2`, `8`, `11`, `3` (yang > 1 dan berada setelahnya), lalu lanjut lagi sampai tidak bisa
 * DFS membandingkan seluruh jalur dan memilih yang paling panjang
-* Output menampilkan subsequence meningkat terpanjang dan panjangnya. 
+* Output menampilkan subsequence meningkat terpanjang dan panjangnya.
 
----
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Kalau kamu kirim **kode Knight’s Tour** (atau file `.py/.c` yang dipakai untuk tugas di gambar), aku bisa bikinkan laporan dengan struktur yang sama: **algoritma (Warnsdorff/backtracking), open tour vs closed tour, bukti/argumen kenapa valid (visit semua kotak tepat sekali), serta analisis kompleksitas**.
+## SOAL 2 : Knight's Tour
+
+
